@@ -4,13 +4,14 @@ import { X } from 'lucide-react';
 import { useWallet } from '../contexts/WalletContext';
 import { BlockyButton } from '../ui/BlockyButton';
 import { ethers } from "ethers";
+import abi from '../../abi/abi.json';
 
 const Header: React.FC = () => {
   const { isConnected, address,evmSigner, connectWallet, disconnect} = useWallet();
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [depositAmount, setDepositAmount] = useState('');
-  const DUMMY_CONTRACT_ADDRESS= "";
-  const DUMMY_CONTRACT_ABI=""
+  const DUMMY_CONTRACT_ADDRESS= "0x88D7D6547D5A12b7B0b2c41A897b63aa3b946661";
+  const DUMMY_CONTRACT_ABI=abi;
   
 
   // Shorten wallet address for display
@@ -33,8 +34,8 @@ const Header: React.FC = () => {
   const handleDepositConfirm = async () => {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const contract = new ethers.Contract(DUMMY_CONTRACT_ADDRESS, DUMMY_CONTRACT_ABI, evmSigner);
-    const apprtx = await contract.approve(
-     
+    const apprtx = await contract.deposit(
+     "0x036CbD53842c5426634e7929541eC2318f3dCF7e",ethers.parseEther(depositAmount)
     );
     if (!depositAmount || parseFloat(depositAmount) <= 0) {
       alert('Please enter a valid amount');
