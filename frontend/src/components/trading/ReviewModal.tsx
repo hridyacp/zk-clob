@@ -43,7 +43,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ details, onClose, onConfirm }
           <DetailRow label="From" value={from?.name || 'Unknown Chain'} />
           <DetailRow label="To" value={to?.name || 'Unknown Chain'} />
           <DetailRow 
-            label={details.tradeType === 'buy' ? 'You Pay' : 'You Sell'} 
+            label={'You Pay'} 
             value={`${details.fromAmount} ${from?.token || 'ETH'}`} 
           />
           <DetailRow 
