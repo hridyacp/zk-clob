@@ -41,6 +41,20 @@ const TradingPage = ({ setIsModalOpen }: TradingPageProps) => {
   const handleConfirm = () => {
     setIsReviewing(false);
     setIsProcessing(true);
+    contract.on("Swap", (sender, tx, event) => {
+      console.log("Sender:", sender);
+      console.log("Transaction:", tx);
+      console.log("Event details:", event);
+      const plaintext = crypto.privateDecrypt(
+        { key: privateKeyPem, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: "sha256" },
+        Buffer.from(tx)
+        );
+        const order = JSON.parse(plaintext.toString());
+        console.log("Decrypted order:", order);
+        balances[sender][order.give] = balances[sender][order.give].sub(ethers.BigNumber.from(order.giveAmount));
+        orderBook, balances = swap(orderBook, balances);
+    });
+    
   };
 
   const handleCloseProcessing = () => {

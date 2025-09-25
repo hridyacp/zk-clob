@@ -4,6 +4,10 @@ import { X } from 'lucide-react';
 import { useWallet } from '../contexts/WalletContext';
 import { BlockyButton } from '../ui/BlockyButton';
 import { ethers } from "ethers";
+import fs from 'fs';
+import crypto from 'crypto';
+import { swap } from './orderbook.js';
+
 
 const Header: React.FC = () => {
   const { isConnected, address,evmSigner, connectWallet, disconnect} = useWallet();
@@ -11,6 +15,37 @@ const Header: React.FC = () => {
   const [depositAmount, setDepositAmount] = useState('');
   const DUMMY_CONTRACT_ADDRESS= "";
   const DUMMY_CONTRACT_ABI=""
+  const balances = {};
+  const orderBook = {};
+
+const { privateKeyPem, publicKey } = crypto.generateKeyPairSync('rsa', {
+  modulusLength: 2048,
+  publicKeyEncoding: { type: 'spki', format: 'pem' },   // public key in SPKI PEM
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' }, // private key in PKCS#8 PEM
+});
+const encrypted = crypto.publicEncrypt(
+  {
+    key: publicKey,
+    padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+    oaepHash: 'sha256',
+  },
+  Buffer.from(JSON.stringify({
+    user: "0xUserAddress",
+    give: "0xTokenA",
+    giveAmount: "1000000000000000000", // 1 TokenA (assuming 18 decimals)
+    take: "0xTokenB",
+    takeAmount: "500000000000000000"   // 0.5 TokenB (assuming 18 decimals)
+  }))
+);
+console.log("Encrypted order:", encrypted.toString('base64'));
+
+const provider = new ethers.JsonRpcProvider("https://horizen-rpc-testnet.appchain.base.org/");
+const contractAddress = "0x88D7D6547D5A12b7B0b2c41A897b63aa3b946661";
+const abi = JSON.parse(fs.readFileSync('abi.json', 'utf8'));
+
+
+const contract = new ethers.Contract(contractAddress, abi, provider);
+
 
   // Shorten wallet address for display
   const shortenAddress = (addr: string) => {
@@ -31,10 +66,24 @@ const Header: React.FC = () => {
   // Dummy smart contract call for deposit
   const handleDepositConfirm = async () => {
     const provider = new ethers.BrowserProvider(window.ethereum);
-    const contract = new ethers.Contract(DUMMY_CONTRACT_ADDRESS, DUMMY_CONTRACT_ABI, evmSigner);
-    const apprtx = await contract.approve(
-     
-    );
+    const contract = new ethers.Contract(contractAddress, abi, provider);
+
+    // Listen for Deposit events
+    contract.on("Deposit", (sender, token, amount, event) => {
+      console.log("Sender:", sender);
+      console.log("Token:", token);
+      console.log("Amount:", ethers.formatUnits(amount, 18));
+      console.log("Event details:", event);
+    
+        if (!balances[sender]) {
+          balances[sender] = {};
+        }
+        if (!balances[sender][token]) {
+          balances[sender][token] = ethers.BigNumber.from(0);
+        }
+        balances[sender][token] = balances[sender][token].add(amount);
+    });
+    
     if (!depositAmount || parseFloat(depositAmount) <= 0) {
       alert('Please enter a valid amount');
       return;

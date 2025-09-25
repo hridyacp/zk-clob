@@ -56,7 +56,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ details, onClose, onConfirm }
         <div className="mt-8">
           <BlockyButton 
             onClick={onConfirm} 
-            color={details.tradeType === 'buy' ? 'green' : 'red'}
+            color={'green' }
             className="w-full bg-mc-gradient hover:shadow-mc-glow"
           >
             Confirm {details.tradeType}
