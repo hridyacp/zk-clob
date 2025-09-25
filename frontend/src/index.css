@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Minecraftia';
+  src: url('/fonts/Minecraftia-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Minecraftia', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #111;
+  color: white;
+  overflow: hidden; /* Prevent scrollbars */
+  image-rendering: pixelated; /* Crucial for the pixel art aesthetic */
+}

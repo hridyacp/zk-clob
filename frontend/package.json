@@ -1,0 +1,41 @@
+{
+  "name": "minecraft-clob-ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.108.3",
+    "@react-three/fiber": "^8.16.8",
+    "@react-three/postprocessing": "^2.15.14",
+    "@tanstack/react-query": "^5.51.1",
+    "ethers": "^6.15.0",
+    "framer-motion": "^11.3.8",
+    "lucide-react": "^0.414.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "three": "^0.167.0",
+    "viem": "^2.17.3",
+    "wagmi": "^2.10.10"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0-alpha.17",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/three": "^0.167.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^9.8.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^4.0.0-alpha.17",
+    "typescript": "~5.5.3",
+    "vite": "^5.3.5"
+  }
+}
